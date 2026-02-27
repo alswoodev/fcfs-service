@@ -2,6 +2,8 @@ package com.fcfs.couponcore.entity;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -41,8 +43,9 @@ public class CouponIssue extends BaseTimeEntity {
     private Long userId;
 
     @Column(nullable = false)
+    @CreatedDate
     private LocalDateTime dateIssued;
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime dateUsed;
 }
