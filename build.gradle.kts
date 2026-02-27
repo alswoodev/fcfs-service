@@ -34,6 +34,12 @@ subprojects{
 	apply(plugin="io.spring.dependency-management")
 	apply(plugin="org.springframework.boot")
 
+	configurations {
+		compileOnly {
+			extendsFrom(configurations.annotationProcessor.get())
+		}
+	}
+
 	repositories {
 		mavenCentral()
 	}
@@ -47,6 +53,7 @@ subprojects{
 		implementation("org.springframework.boot:spring-boot-starter")
 		
 		testImplementation("org.springframework.boot:spring-boot-starter-test")
+		testAnnotationProcessor ("org.projectlombok:lombok")
 		testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	}
 }
