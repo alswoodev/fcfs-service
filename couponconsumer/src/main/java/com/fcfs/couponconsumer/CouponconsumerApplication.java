@@ -11,6 +11,7 @@ import com.fcfs.couponcore.CouponCoreConfiguration;
 public class CouponconsumerApplication {
 
 	public static void main(String[] args) {
+		System.setProperty("spring.config.name", "application-core,application-consumer");
 		SpringApplication.run(CouponconsumerApplication.class, args);
 	}
 
