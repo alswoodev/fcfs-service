@@ -33,7 +33,7 @@ public class CouponIssue extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(
-            name = "coupons",
+            name = "coupon_id",
             nullable = false,
             foreignKey = @ForeignKey(name = "FK_COUPON_ISSUE_COUPON")
     )

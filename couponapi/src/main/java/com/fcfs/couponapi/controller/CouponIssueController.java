@@ -21,7 +21,9 @@ public class CouponIssueController {
 
     @PostMapping
     public CouponIssueResponse issueCoupon(@RequestBody CouponIssueRequest request) {
-        couponIssueService.issueCoupon(request.couponId(), request.userId());
+        synchronized (this) {
+            couponIssueService.issueCoupon(request.couponId(), request.userId());
+        }
         return new CouponIssueResponse(true, "Coupon issued successfully");
     }
     
