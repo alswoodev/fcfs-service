@@ -30,10 +30,15 @@ public class CouponIssueController {
             couponIssueService.issueCoupon(request.couponId(), request.userId());
         }*/
         
+        /* 2. Use distributed lock with redis redlock to prevent concurrent updates
         distributeLockExecutor.execute("coupon_issue_lock:" + request.couponId(), 10000, 10000, () -> {
             couponIssueService.issueCoupon(request.couponId(), request.userId());
         });
+        */
         
+        // 3. Use pessimistic lock with database to prevent concurrent updates
+        couponIssueService.issueCoupon(request.couponId(), request.userId());
+
         return new CouponIssueResponse(true, "Coupon issued successfully");
     }
     

@@ -23,7 +23,7 @@ public class CouponIssueService {
     @Transactional
     public void issueCoupon(Long couponId, Long userId) {
         // Find coupon by ID
-        Coupon coupon = couponJpaRepository.findById(couponId)
+        Coupon coupon = couponJpaRepository.findByIdForUpdate(couponId)
                 .orElseThrow(() -> new CouponIssueException(ErrorCode.COUPON_NOT_EXISTS, "Coupon not found with ID: %s".formatted(couponId)));
 
         coupon.issue();
