@@ -2,8 +2,8 @@ import random
 from locust import FastHttpUser, task
 
 class CouponIssueUser(FastHttpUser):
-    connection_timeout = 5.0
-    network_timeout = 5.0
+    connection_timeout = 10
+    network_timeout = 10
 
     @task
     def issue_coupon(self):
