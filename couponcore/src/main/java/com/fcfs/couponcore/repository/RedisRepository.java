@@ -1,6 +1,7 @@
 package com.fcfs.couponcore.repository;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -41,5 +42,28 @@ public class RedisRepository {
     public Boolean rPush(String key, String value) {
         Long result = redisTemplate.opsForList().rightPush(key, value);
         return result != null && result > 0;
+    }
+
+    public RedisScript<String> issueScript() {
+        String script = """
+            local setKey = KEYS[1]
+            local queueKey = KEYS[2]
+            local userId = ARGV[1]
+            local limit = tonumber(ARGV[2])
+            local userCouponId = ARGV[3]
+            
+            if redis.call('SISMEMBER', setKey, userId) == 1 then
+                return 'DUPLICATE'
+            end
+            
+            if redis.call('SCARD', setKey) >= limit then
+                return 'LIMIT_EXCEEDED'
+            end
+            
+            redis.call('SADD', setKey, userId)
+            redis.call('RPUSH', queueKey, userCouponId)
+            return 'OK'
+        """;
+        return RedisScript.of(script, String.class);
     }
 }

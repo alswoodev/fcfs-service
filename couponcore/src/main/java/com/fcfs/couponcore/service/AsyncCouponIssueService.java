@@ -77,6 +77,22 @@ public class AsyncCouponIssueService {
         });
     }
 
+    public void issueCouponWithLuaScript(Long userId, Long couponId) {
+        Coupon coupon = couponIssueService.getCoupon(couponId);
+        String setKey = "issue.request.couponId=%s".formatted(coupon.getId());
+        RedisCouponQueue request = new RedisCouponQueue(userId, couponId);
+
+        // 1. Check whether the coupon is within the issue period
+        if(!coupon.isWithinIssuePeriod()) throw new CouponIssueException(ErrorCode.INVALID_COUPON_ISSUE_TIME, "Coupon is not within issue period user:%s coupon:%s".formatted(userId, coupon.getId()));
+        try{
+            redisTemplate.execute(redisRepository.issueScript(), 
+                            List.of(setKey, ISSUE_REQUEST_QUEUE_KEY), 
+                            userId.toString(), String.valueOf(COUPON_ISSUE_LIMIT), objectMapper.writeValueAsString(request));
+        } catch (Exception e) {
+            throw new CouponIssueException(ErrorCode.FAIL_TO_ISSUE_COUPON, "Failed to issue coupon with Lua script user:%s coupon:%s".formatted(userId, coupon.getId()));
+        }
+    }
+
     private void enqueueIssueRequest(Long userId, Long couponId) {
         RedisCouponQueue request = new RedisCouponQueue(userId, couponId);
         try {
