@@ -2,6 +2,7 @@ package com.fcfs.couponcore.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fcfs.couponcore.exception.CouponIssueException;
 import com.fcfs.couponcore.exception.ErrorCode;
 
@@ -55,12 +56,14 @@ public class Coupon extends BaseTimeEntity{
     @Column(nullable = false)
     private LocalDateTime dateIssueEnd;
 
+    @JsonIgnore
     public boolean isAvailableForIssue() {
         if (totalQuantity == null) return true; // When totalQuantity is null, it means there is no limit on the number of coupons that can be issued.
         if (couponType == CouponType.FIRST_COME_FIRST_SERVED) return issuedQuantity < totalQuantity;
         return true;
     }
 
+    @JsonIgnore
     public boolean isWithinIssuePeriod() {
         LocalDateTime now = LocalDateTime.now();
         return now.isAfter(dateIssueStart) && now.isBefore(dateIssueEnd);

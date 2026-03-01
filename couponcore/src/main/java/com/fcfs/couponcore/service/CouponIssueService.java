@@ -1,5 +1,6 @@
 package com.fcfs.couponcore.service;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.fcfs.couponcore.entity.Coupon;
@@ -19,6 +20,12 @@ public class CouponIssueService {
     private final CouponIssueRepository couponIssueRepository;
     private final CouponIssueJpaRepository couponIssueJpaRepository;
     private final CouponJpaRepository couponJpaRepository;
+
+    @Cacheable(value = "couponCache", key = "#p0")
+    public Coupon getCoupon(Long couponId) {
+        return couponJpaRepository.findById(couponId)
+                .orElseThrow(() -> new CouponIssueException(ErrorCode.COUPON_NOT_EXISTS, "Coupon not found with ID: %s".formatted(couponId)));
+    }
 
     @Transactional
     public void issueCoupon(Long couponId, Long userId) {

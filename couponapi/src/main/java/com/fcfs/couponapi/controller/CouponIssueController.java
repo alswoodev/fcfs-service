@@ -48,7 +48,8 @@ public class CouponIssueController {
 
     @PostMapping("/async")
     public CouponIssueResponse asyncIssueCoupon(@RequestBody CouponIssueRequest request) {
-        asyncCouponIssueService.issueCouponWithOrderedSet(request.userId(), request.couponId());
+        //asyncCouponIssueService.issueCouponWithOrderedSet(request.userId(), request.couponId());
+        asyncCouponIssueService.issueCouponWithSetAndQueue(request.userId(), request.couponId());
         return new CouponIssueResponse(true, "Async coupon issued successfully");
     }
     

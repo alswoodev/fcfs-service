@@ -23,4 +23,23 @@ public class RedisRepository {
     public Boolean zAdd(String key, String value, double score) {
         return redisTemplate.opsForZSet().addIfAbsent(key, value, score);
     }
+
+    public Boolean sIsMember(String key, String value) {
+        Boolean isMember = redisTemplate.opsForSet().isMember(key, value);
+        return isMember != null && isMember;
+    }
+
+    public Long sCard(String key){
+        Long size = redisTemplate.opsForSet().size(key);
+        return size != null ? size : 0L;
+    }
+
+    public Long sAdd(String key, String value) {
+        return redisTemplate.opsForSet().add(key, value);
+    }
+
+    public Boolean rPush(String key, String value) {
+        Long result = redisTemplate.opsForList().rightPush(key, value);
+        return result != null && result > 0;
+    }
 }
