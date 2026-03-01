@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fcfs.couponapi.dto.CouponIssueRequest;
 import com.fcfs.couponapi.dto.CouponIssueResponse;
 import com.fcfs.couponcore.component.DistributeLockExecutor;
+import com.fcfs.couponcore.service.AsyncCouponIssueService;
 import com.fcfs.couponcore.service.CouponIssueService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class CouponIssueController {
     
     @Autowired
     private CouponIssueService couponIssueService;
+
+    @Autowired
+    private AsyncCouponIssueService asyncCouponIssueService;
 
     @Autowired
     private DistributeLockExecutor distributeLockExecutor;
@@ -41,5 +45,12 @@ public class CouponIssueController {
 
         return new CouponIssueResponse(true, "Coupon issued successfully");
     }
+
+    @PostMapping("/async")
+    public CouponIssueResponse asyncIssueCoupon(@RequestBody CouponIssueRequest request) {
+        asyncCouponIssueService.issueCouponWithOrderedSet(request.userId(), request.couponId());
+        return new CouponIssueResponse(true, "Async coupon issued successfully");
+    }
+    
     
 }
