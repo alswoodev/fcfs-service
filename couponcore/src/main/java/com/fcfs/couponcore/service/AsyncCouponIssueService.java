@@ -30,7 +30,7 @@ public class AsyncCouponIssueService {
     public static final String ISSUE_REQUEST_QUEUE_KEY = "issue.request.queue";
 
     public void issueCouponWithOrderedSet(Long userId, Long couponId) {
-        Coupon coupon = couponIssueService.getCoupon(couponId);
+        Coupon coupon = couponIssueService.getCouponWithLocalCache(couponId);
         String key = "issue.request.sorted_set.couponId=%s".formatted(coupon.getId());
         String value = userId.toString();
         double score = System.currentTimeMillis(); // Use current time as score
@@ -53,7 +53,7 @@ public class AsyncCouponIssueService {
     }
 
     public void issueCouponWithSetAndQueue(Long userId, Long couponId) {
-        Coupon coupon = couponIssueService.getCoupon(couponId);
+        Coupon coupon = couponIssueService.getCouponWithLocalCache(couponId);
         String key = "issue.request.couponId=%s".formatted(coupon.getId());
         String value = userId.toString();
 
@@ -78,7 +78,7 @@ public class AsyncCouponIssueService {
     }
 
     public void issueCouponWithLuaScript(Long userId, Long couponId) {
-        Coupon coupon = couponIssueService.getCoupon(couponId);
+        Coupon coupon = couponIssueService.getCouponWithLocalCache(couponId);
         String setKey = "issue.request.couponId=%s".formatted(coupon.getId());
         RedisCouponQueue request = new RedisCouponQueue(userId, couponId);
 

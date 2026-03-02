@@ -69,6 +69,10 @@ public class Coupon extends BaseTimeEntity{
         return now.isAfter(dateIssueStart) && now.isBefore(dateIssueEnd);
     }
 
+    public boolean isAvailableForIssueWithIssuePeriod() {
+        return isAvailableForIssue() && isWithinIssuePeriod();
+    }
+
     public void issue(){
         if (!isAvailableForIssue()) {
             throw new CouponIssueException(ErrorCode.INVALID_COUPON_ISSUE_QUANTITY, 
@@ -80,5 +84,5 @@ public class Coupon extends BaseTimeEntity{
         }
         issuedQuantity++;
     }
-
+    
 }
