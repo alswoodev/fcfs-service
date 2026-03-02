@@ -27,7 +27,7 @@ public class AsyncCouponIssueService {
     private final RedisTemplate<String, String> redisTemplate;
 
     private static final int COUPON_ISSUE_LIMIT = 500;
-    private static final String ISSUE_REQUEST_QUEUE_KEY = "issue.request.queue";
+    public static final String ISSUE_REQUEST_QUEUE_KEY = "issue.request.queue";
 
     public void issueCouponWithOrderedSet(Long userId, Long couponId) {
         Coupon coupon = couponIssueService.getCoupon(couponId);

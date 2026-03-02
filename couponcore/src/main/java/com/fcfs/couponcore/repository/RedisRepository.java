@@ -39,9 +39,19 @@ public class RedisRepository {
         return redisTemplate.opsForSet().add(key, value);
     }
 
+    //Queue operations
     public Boolean rPush(String key, String value) {
         Long result = redisTemplate.opsForList().rightPush(key, value);
         return result != null && result > 0;
+    }
+
+    public String lPop(String key) {
+        return redisTemplate.opsForList().leftPop(key);
+    }
+
+    public Long lLen(String key) {
+        Long size = redisTemplate.opsForList().size(key);
+        return size != null ? size : 0L;
     }
 
     public RedisScript<String> issueScript() {
